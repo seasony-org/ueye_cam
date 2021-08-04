@@ -182,7 +182,7 @@ struct CameraParameters {
     pwm_freq(1.0),
     pwm_duty_cycle(0.5),
     auto_frame_rate(false),
-    frame_rate(10.0),
+    frame_rate(15.0),
     pixel_clock(25),
     flip_vertical(false),
     flip_horizontal(false)

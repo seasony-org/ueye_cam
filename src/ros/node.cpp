@@ -114,9 +114,9 @@ void log_nested_exception(
       throw;
   } catch (const std::exception& e) {
     switch(log_level) {
-      case WARN: { RCLCPP_WARN(logger, " %s- ", std::string(level, ' ').c_str(), e.what()); break; }
-      case ERROR: { RCLCPP_ERROR(logger, " %s- %s", std::string(level, ' ').c_str(), e.what()); break; }
-      case FATAL: { RCLCPP_FATAL(logger, " %s- %s", std::string(level, ' ').c_str(), e.what()); break; }
+      case WARN: { RCLCPP_WARN(logger, "%s- %s", std::string(level, ' ').c_str(), e.what()); break; }
+      case ERROR: { RCLCPP_ERROR(logger, "%s- %s", std::string(level, ' ').c_str(), e.what()); break; }
+      case FATAL: { RCLCPP_FATAL(logger, "%s- %s", std::string(level, ' ').c_str(), e.what()); break; }
     }
   }
   try {
@@ -153,7 +153,7 @@ Node::Node(const rclcpp::NodeOptions & options):
     prev_output_frame_idx_(0)
 {
   ros_image_.is_bigendian = (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__); // TODO: what about MS Windows?
-
+  
   /******************************************
    * Node Parameters
    ******************************************/
@@ -259,7 +259,7 @@ Node::Node(const rclcpp::NodeOptions & options):
 
   // Dashing: set_on_parameters_set_callback
   // Foxy: add_on_set_parameters_callback
-  // Handler needs to be alive to keep the callback functional
+  // Handler needs to be alive to keep the callback function
   parameter_callback_handler_ = this->add_on_set_parameters_callback(
       std::bind(&Node::onParameterChange, this, std::placeholders::_1)
   );
@@ -527,7 +527,7 @@ bool Node::fillMsgData(sensor_msgs::msg::Image& img) const {
   if (cam_buffer_pitch_ < expected_row_stride) {
     RCLCPP_ERROR(
         this->get_logger(),
-        "Camera buffer pitch (%s) is smaller than expected for [%s]: width (%s) * bytes per pixel (%s) = %s",
+        "Camera buffer pitch (%d) is smaller than expected for [%s]: width (%d) * bytes per pixel (%d) = %d",
         cam_buffer_pitch_,
         node_parameters_.camera_name.c_str(),
         cam_aoi_.s32Width,
@@ -546,13 +546,13 @@ bool Node::fillMsgData(sensor_msgs::msg::Image& img) const {
 
   RCLCPP_DEBUG(
       this->get_logger(),
-      "Allocated ROS image buffer for [%s]:\n  size: %s\n  width: %s\n  height: %s\n  step: %s\n  encoding: %s\n",
+      "Allocated ROS image buffer for [%s]:\n  size: %d\n  width: %d\n  height: %d\n  step: %d\n  encoding: %s\n",
       node_parameters_.camera_name.c_str(),
       cam_buffer_size_,
       img.width,
       img.height,
       img.step,
-      img.encoding
+      img.encoding.c_str()
   );
 
   const std::function<void*(void*, void*, size_t)> unpackCopy = getUnpackCopyFunc(color_mode_);
@@ -854,7 +854,8 @@ rcl_interfaces::msg::SetParametersResult Node::onParameterChange(std::vector<rcl
     // restore original 'working' parameters
     std::ostringstream ostream;
     ostream << "failed to reconfigure parameters on camera, rejecting [" << e.what() << "]";
-    RCLCPP_WARN(this->get_logger(), ostream.str().c_str());
+    //RCLCPP_WARN(this->get_logger(), ostream.str().c_str()); TODO: This does not want to compile.
+    RCLCPP_WARN(this->get_logger(), "failed to reconfigure parameters on camera");
     try {
       std::lock_guard<std::mutex> guard{parameter_mutex_};  // setCamParams updates camera_parameters_
       setCamParams(original_parameters);
@@ -953,7 +954,7 @@ rclcpp::Time Node::getImageTimestamp() {
 rclcpp::Time Node::getImageTickTimestamp() {
   uint64_t tick;
   if(getClockTick(&tick)) {
-    return init_ros_time_ + rclcpp::Duration(double(tick - init_clock_tick_)*1e-7);
+    return init_ros_time_ + rclcpp::Duration::from_nanoseconds(tick - init_clock_tick_); // TODO: not sure about the *1e-7
   }
   return this->now();
 }
@@ -967,7 +968,8 @@ void Node::printConfiguration() const {
   ostream << "UEye Camera Configuration\n\n";
   ostream << node_parameters_.to_str() << "\n";
   ostream << camera_parameters_.to_str();
-  RCLCPP_INFO(this->get_logger(), ostream.str());
+  //RCLCPP_INFO(this->get_logger(), ostream.str().c_str()); //TODO: this does not want to compile
+  RCLCPP_INFO(this->get_logger(), "TESTING");
 }
 
 void Node::handleTimeout() {
@@ -977,7 +979,7 @@ void Node::handleTimeout() {
   //                overkill to create a ueye_cam_interfaces package for a single msg.
   //  - Diagnostics - would be the best option, but it's yet more effort.
   timeout_count_++;
-  RCLCPP_WARN(get_logger(), "UEye: timed out [%d]", timeout_count_);
+  RCLCPP_WARN(get_logger(), "UEye: timed out [%llu]", timeout_count_);
 };
 
 } // namespace ueye_cam

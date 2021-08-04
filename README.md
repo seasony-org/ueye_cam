@@ -15,6 +15,9 @@ Note however, that these are not made available for a runtime environment. These
 and libraries are not installed to the install space and you'll also need to install
 the IDS discovery daemon.
 
+Conclusion, the recommendation is to install the IDS Software to make sure the camera is working outside of the ROS enviornment.
+
+
 **Runtime**
 
 * [IDS uEye Software Suite](https://en.ids-imaging.com/downloads.html) >= 4.94 
@@ -22,21 +25,54 @@ the IDS discovery daemon.
 The IDS Software Suite installs headers, libraries, documentation and a daemon used for
 discovery of UEye cameras.
 
-Start the discovery daemon for ethernet connected cameras:
+* Download the official software from 
+https://en.ids-imaging.com/download-details/AB00038.html?os=linux&version=&bus=64&floatcalc=
+if it asks to select the product just select:
+firmware: uEye (IDS Software Suite)
+Interface: USB3
+Family: CP
+Model: UI-3220CP-c-HQ
 
-```
-$ sudo systemctl start ueyeethdrc
-$ sudo /etc/init.d/ueyeethdrc start
-```
+The software to download includes:
+	- ids-software-suite-linux-4.94.2-64.tgz
+	- ueye-stream-2.0-64.tgz
+	- https://pypi.org/project/pyueye/
+	
+* Extract:
+ueye-stream-2.0-64.tgz
+ids-software-suite-linux-4.94.2-64.tgz
+* Install:
+Make software executable "chmod +x name.run" and run with "./name.run" with name.run the name of the file.
+
+* Connect the camera to the computer
+* Check that the camera is working:
+	- Run "sudo idscameramanager" to the terminal to run the camera suite.
+	- Choose the option "Daemon control" and make sure that the USB daemon has started
+	- The connected camera should show on the cameralist and it is ready when you see 
+		free: yes (top).
+	    avail.: yes (top).
+	  Double click on the camera item on the list and a new window should open and the output should be seen. Remember to close the device on this window after using it.
 
 To configure the cameras, do it via the `idscameramanager` graphical tool (should be reasonably
-self-explanatory) or via the command line tools:
-
-* Enumerate the network interfaces to be used for discovery (`/etc/ids/ueye/ueyeethd.conf`)
-* Configure the camera ip addresses (`ueyesetip`)
-* Configure the camera ids (`ueyesetid`)
+self-explanatory) or via the command line tools
 
 ## Usage
+**ROS2 package installation and building steps**
+* Create a workspace
+```
+$ mkdir multispectral_camera_ws
+$ cd multispectral_camera_ws && mkdir src 
+$ cd src
+$ git clone git@github.com:seasony-org/ueye_cam.git
+$ git checkout galactic
+$ colcon build
+```
+
+You may need to install different depencendies such as:
+	* sudo apt-get install qt4-default 
+    ref to get the repos. They are not available by default in ubuntu 20.04:
+    https://ubuntuhandbook.org/index.php/2020/07/install-qt4-ubuntu-20-04/
+	* sudo apt-get install libtclap-dev
 
 **Resources**
 

@@ -1,12 +1,14 @@
 .project
 .cproject
 .pydevproject
+.history
 CMakeFiles
 msg_gen
 srv_gen
 CMakeCache.txt
 cmake_install.cmake
 build
+log
 *.pyc
 bin/
 CPackConfig.cmake
