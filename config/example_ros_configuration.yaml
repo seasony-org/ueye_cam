@@ -6,8 +6,8 @@
 ueye_cam:
   ros__parameters:
     # Node parameters: for defaults, ueye_cam/node_parameters.hpp
-    camera_name: froody
-    frame_name: froody
+    camera_name: camera_silios
+    frame_name: camera_silios_link
     camera_id: 0                # 0 : ANY_CAMERA
     # Camera parameters: for defaults, ueye_cam/camera_parameters.hpp
     #auto_frame_rate: false

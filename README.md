@@ -91,9 +91,6 @@ file can be useful for parameters that it does not yet cover.
 To get started, launch the standalone or component launcher. It is configured with a parameterisation that should enable connection to most IDS cameras.
 
 ```
-# Install launcher / debugging / viz tools if you don't already have them
-$ sudo apt install ros-foxy-ros2launch ros-foxy-ros2param ros-foxy-ros2run ros-foxy-ros2topic ros-foxy-rqt-image-view
-
 # Uses ueye_cam/config/standalone.yaml
 $ ros2 launch ueye_cam standalone.launch.py
 
