@@ -424,7 +424,7 @@ void Node::frameGrabLoop() {
     if (isCapturing()) {
       parameter_mutex_.lock();
       UINT eventTimeout = (camera_parameters_.auto_frame_rate || camera_parameters_.ext_trigger_mode) ?
-          static_cast<INT>(2000) : static_cast<INT>(1000.0 / camera_parameters_.frame_rate * 2);
+          static_cast<INT>(2000) : static_cast<INT>(10000.0 / camera_parameters_.frame_rate * 2);
       parameter_mutex_.unlock();
 
       if (processNextFrame(eventTimeout) != nullptr) {
@@ -854,7 +854,7 @@ rcl_interfaces::msg::SetParametersResult Node::onParameterChange(std::vector<rcl
     // restore original 'working' parameters
     std::ostringstream ostream;
     ostream << "failed to reconfigure parameters on camera, rejecting [" << e.what() << "]";
-    //RCLCPP_WARN(this->get_logger(), ostream.str().c_str()); TODO: This does not want to compile.
+    RCLCPP_WARN_STREAM(this->get_logger(), ostream.str().c_str());
     RCLCPP_WARN(this->get_logger(), "failed to reconfigure parameters on camera");
     try {
       std::lock_guard<std::mutex> guard{parameter_mutex_};  // setCamParams updates camera_parameters_
@@ -968,8 +968,8 @@ void Node::printConfiguration() const {
   ostream << "UEye Camera Configuration\n\n";
   ostream << node_parameters_.to_str() << "\n";
   ostream << camera_parameters_.to_str();
-  //RCLCPP_INFO(this->get_logger(), ostream.str().c_str()); //TODO: this does not want to compile
-  RCLCPP_INFO(this->get_logger(), "TESTING");
+  RCLCPP_INFO_STREAM(get_logger(), ostream.str().c_str());
+
 }
 
 void Node::handleTimeout() {
