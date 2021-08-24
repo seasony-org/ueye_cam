@@ -6,12 +6,13 @@
 ueye_cam:
   ros__parameters:
     # Node parameters: for defaults, ueye_cam/node_parameters.hpp
-    camera_name: camera_silios_POPO
+    camera_name: camera_silios
     frame_name: camera_silios_link
     camera_id: 0                # 0 : ANY_CAMERA
     # Camera parameters: for defaults, ueye_cam/camera_parameters.hpp
     auto_frame_rate: false
     auto_exposure: false
+    exposure: 25.0
     frame_rate: 60.0
     color_mode: mono8
     image_width: 1280

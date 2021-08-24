@@ -87,6 +87,6 @@ def generate_launch_description() -> launch.LaunchDescription:
         )
     )
     launch_nodes.append(
-        launch.actions.LogInfo(msg=["Bob the robot, launching ueye_cam for you. Need a colander?"])
+        launch.actions.LogInfo(msg=["Initializing the ueye camera device!"])
     )
     return launch.LaunchDescription(launch_nodes)
