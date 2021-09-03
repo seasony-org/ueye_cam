@@ -20,23 +20,31 @@ Conclusion, the recommendation is to install the IDS Software to make sure the c
 
 **Runtime**
 
-* [IDS uEye Software Suite](https://en.ids-imaging.com/downloads.html) >= 4.94 
+* [IDS uEye Software Suite](https://en.ids-imaging.com/downloads.html) = 4.94.2 
 
 The IDS Software Suite installs headers, libraries, documentation and a daemon used for
 discovery of UEye cameras.
 
 * Download the official software from 
 https://en.ids-imaging.com/download-details/AB00038.html?os=linux&version=&bus=64&floatcalc=
+If the default download is a different version, go to Archive and you should be able to find the correct file (ids-software-suite-linux-4.94.2-64.tgz)
+
 if it asks to select the product just select:
 firmware: uEye (IDS Software Suite)
 Interface: USB3
 Family: CP
 Model: UI-3220CP-c-HQ
 
-The software to download is a zip file that includes a few of debian packages. You need to install all of them. You may notice that they depend on each other so if you try to install one and you cannot, you can read the error message and install the requirements first
-```
-sudo dpkg -i <package_name>
-```
+The software to download includes:
+	- ids-software-suite-linux-4.94.2-64.tgz
+	- ueye-stream-2.0-64.tgz
+	- https://pypi.org/project/pyueye/
+	
+* Extract:
+ueye-stream-2.0-64.tgz
+ids-software-suite-linux-4.94.2-64.tgz
+* Install:
+Make software executable "chmod +x name.run" and run with "./name.run" with name.run the name of the file.
 
 * Connect the camera to the computer
 * Check that the camera is working:
@@ -51,10 +59,7 @@ To configure the cameras, do it via the `idscameramanager` graphical tool (shoul
 self-explanatory) or via the command line tools
 
 ## Usage
-**ROS2 package installation and building steps if you are just using this package and not .rosinstall**
-IMPORTANT!!!!!
-NOTICE: the dependencies are needed regardless installing through .rosinstall or manually
-
+**ROS2 package installation and building steps**
 * Create a workspace
 ```
 $ mkdir multispectral_camera_ws
@@ -66,11 +71,16 @@ $ colcon build
 ```
 
 You may need to install different depencendies such as:
+	
 	* sudo apt-get install qt4-default 
     ref to get the repos. They are not available by default in ubuntu 20.04:
     https://ubuntuhandbook.org/index.php/2020/07/install-qt4-ubuntu-20-04/
+	
 	* sudo apt-get install libtclap-dev
+	
 	* sudo apt-get install ros-galactic-camera-calibration-parsers
+
+	* sudo apt-get install ros-galactic-camera-info-manager
 
 **Resources**
 
