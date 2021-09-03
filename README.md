@@ -33,16 +33,10 @@ Interface: USB3
 Family: CP
 Model: UI-3220CP-c-HQ
 
-The software to download includes:
-	- ids-software-suite-linux-4.94.2-64.tgz
-	- ueye-stream-2.0-64.tgz
-	- https://pypi.org/project/pyueye/
-	
-* Extract:
-ueye-stream-2.0-64.tgz
-ids-software-suite-linux-4.94.2-64.tgz
-* Install:
-Make software executable "chmod +x name.run" and run with "./name.run" with name.run the name of the file.
+The software to download is a zip file that includes a few of debian packages. You need to install all of them. You may notice that they depend on each other so if you try to install one and you cannot, you can read the error message and install the requirements first
+```
+sudo dpkg -i <package_name>
+```
 
 * Connect the camera to the computer
 * Check that the camera is working:
@@ -57,7 +51,10 @@ To configure the cameras, do it via the `idscameramanager` graphical tool (shoul
 self-explanatory) or via the command line tools
 
 ## Usage
-**ROS2 package installation and building steps**
+**ROS2 package installation and building steps if you are just using this package and not .rosinstall**
+IMPORTANT!!!!!
+NOTICE: the dependencies are needed regardless installing through .rosinstall or manually
+
 * Create a workspace
 ```
 $ mkdir multispectral_camera_ws
@@ -73,6 +70,7 @@ You may need to install different depencendies such as:
     ref to get the repos. They are not available by default in ubuntu 20.04:
     https://ubuntuhandbook.org/index.php/2020/07/install-qt4-ubuntu-20-04/
 	* sudo apt-get install libtclap-dev
+	* sudo apt-get install ros-galactic-camera-calibration-parsers
 
 **Resources**
 
